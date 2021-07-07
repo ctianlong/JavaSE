@@ -17,7 +17,7 @@ public class LazySupplier<T> implements Supplier<T> {
 
 	private Supplier<T> supplier;
 	private volatile boolean initialized;
-	private T value;
+	private volatile T value;
 
 	public LazySupplier(Supplier<T> supplier) {
 		this.supplier = Objects.requireNonNull(supplier, "Lazy Supplier can not be null");
