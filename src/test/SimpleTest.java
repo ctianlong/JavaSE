@@ -911,7 +911,16 @@ public class SimpleTest {
 //        }
     }
 
-
+    public static void main(String[] args) throws InterruptedException {
+        Map<String, Integer> map = Maps.newHashMap();
+        map.put("k1", 1);
+        map.put("k2", 2);
+        map.put("k3", 3);
+        Stream<Integer> stream = map.values().stream();
+        List<Integer> list = stream.map(i -> i + 1).collect(Collectors.toList());
+        System.out.println(list);
+        stream.forEach(System.out::println);
+    }
 
 
 

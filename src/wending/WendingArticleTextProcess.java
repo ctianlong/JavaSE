@@ -1,4 +1,4 @@
-package test;
+package wending;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;

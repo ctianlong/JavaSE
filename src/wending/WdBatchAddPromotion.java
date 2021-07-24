@@ -1,4 +1,4 @@
-package test;
+package wending;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
