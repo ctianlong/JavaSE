@@ -81,6 +81,7 @@ public class SimpleTest {
         long afterTaxSell = new BigDecimal(sell * 10000).
                 divide(new BigDecimal(10600), 0, RoundingMode.HALF_EVEN).longValue();
         System.out.println(afterTaxSell);
+        System.out.println(null instanceof String);
     }
 
     @Test
@@ -96,12 +97,12 @@ public class SimpleTest {
     public void generate() {
         String t =
                 "@JsonIgnore\n" +
-                        "public String getReturnD{n1}() {\n" +
-                                "    return doGetReturnN({n1});\n" +
-                                "}\n";
+                        "public String getFormatD{n}() {\n" +
+                        "    return doGetFormatDn({n});\n" +
+                        "}\n";
         StringBuilder sb = new StringBuilder();
-        for (int i = 61; i <= 365; i++) {
-            sb.append(t.replace("{n1}", String.valueOf(i)));
+        for (int i = 1; i <= 365; i++) {
+            sb.append(t.replace("{n}", String.valueOf(i)));
         }
         System.out.println(sb.toString());
 
@@ -912,6 +913,7 @@ public class SimpleTest {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        System.out.println(String.format("1:%s, 2:%s", "a", null));
         Map<String, Integer> map = Maps.newHashMap();
         map.put("k1", 1);
         map.put("k2", 2);
@@ -920,6 +922,51 @@ public class SimpleTest {
         List<Integer> list = stream.map(i -> i + 1).collect(Collectors.toList());
         System.out.println(list);
         stream.forEach(System.out::println);
+    }
+
+    @Test
+    public void testMe() {
+        String s1 = null;
+        String s2 = "";
+        Long n1 = null;
+        Integer n2 = 3;
+        System.out.println(isAnyInvalid(s1, s2, n1));
+        System.out.println(isAnyValid(s1, s2, n1, n2));
+    }
+
+    private boolean isAnyInvalid(Object... objs) {
+        if (objs.length == 0) {
+            throw new RuntimeException("isAnyInvalid parameter length is zero");
+        }
+        for (Object obj : objs)
+            if (!isValid(obj))
+                return true;
+        return false;
+    }
+
+    private boolean isAnyValid(Object... objs) {
+        if (objs.length == 0) {
+            throw new RuntimeException("isAnyValid parameter length is zero");
+        }
+        for (Object obj : objs)
+            if (isValid(obj))
+                return true;
+        return false;
+    }
+
+    private boolean isValid(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof String) {
+            return StringUtils.isNotBlank((String) obj);
+        } else if (obj instanceof Long) {
+            return NumberUtils.existAndGt0((Long) obj);
+        } else if (obj instanceof Integer) {
+            return NumberUtils.existAndGt0((Integer) obj);
+        } else {
+            throw new RuntimeException("isValid just support String or Long or Integer");
+        }
     }
 
 

@@ -735,6 +735,14 @@ public class NumberUtils {
         return sb.toString();
     }
 
+    public static boolean existAndGt0(Long num) {
+        return num != null && num > 0;
+    }
+
+    public static boolean existAndGt0(Integer num) {
+        return num != null && num > 0;
+    }
+
     public static void main(String[] args) {
 		short s = 10;
 		byte b=10;
