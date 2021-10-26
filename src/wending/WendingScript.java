@@ -41,12 +41,12 @@ public class WendingScript {
 	private static boolean apiInsert(String title, String content, long index) throws Exception {
 		CloseableHttpClient httpClient = HttpClientUtils.getDefaultHttpClient();
 		Map<String, String> header = new HashMap<>();
-		header.put("Cookie", "NOVEL_FINANCE_BACKEND_U=7cdda423-177e-4a79-a7f4-a2263c338781-1630289633775");
+		header.put("Cookie", "NOVEL_FINANCE_BACKEND_U=13ffcbaf-66c6-457b-8ddf-a480bee2cbab-1635216232838");
 		Map<String, String> params = new HashMap<>();
 		params.put("articleContent", content);
 		params.put("articleTitle", title);
 		params.put("indexId", String.valueOf(index));
-		params.put("bookId", "2eab216948b74ed6ae7532f56ff8a013_4");
+		params.put("bookId", "3a5b5b89087d47e1aa13b621b5070eea_4");
 		params.put("needPay", "1");
 		params.put("needAnti", "false");
 //        params.put("csrf_token", "3313fbcb5e0654489117eeed22498652");
@@ -85,13 +85,13 @@ public class WendingScript {
 	public void read() throws Exception {
 		System.out.println("startTime: " + new Date());
 		// todo 首行换行，注意首行的标题可能有特殊字符，导致无法匹配正则
-        String path = "C:\\Users\\ctl\\Desktop\\接都市雄才 - 副本.txt";
+        String path = "C:\\Users\\ctl\\Desktop\\丁二狗的完美人生-接书文档.txt";
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 		int count = 0;
 		int count1 = 0;
 		List<String> error = Lists.newArrayList();
 		int startIndex = 4805;
-		long startSort = 240201;
+		long startSort = 185001;
 		String realTitle = null;
 		StringBuilder sb = new StringBuilder();
 		while (true) {
@@ -149,14 +149,16 @@ public class WendingScript {
 					startIndex++;
 				}
 
-				String ss = line.substring(line.indexOf("章") + 1);
-				String title = ss.replaceFirst("^[\\s：]+", "");
+				realTitle = line.substring(1);
+
+//				String ss = line.substring(line.indexOf("章") + 1);
+//				String title = ss.replaceFirst("^[\\s：]+", "");
 
 //				String title = StringUtils.removeStart(s2, " ");
 
 //				String[] split = StringUtils.split(line, "章");
 //				realTitle = "第" + String.valueOf(startIndex) + "章" + title;
-				realTitle = "第" + String.valueOf(startIndex) + "章";
+//				realTitle = "第" + String.valueOf(startIndex) + "章";
 //				if (split.length == 2) {
 //					realTitle = realTitle + "" + split[1];
 //				}
@@ -189,10 +191,11 @@ public class WendingScript {
 	private static final Pattern P3 = Pattern.compile("^第[零一二三四五六七八九十百千]+章\\s.+$");
 	private static final Pattern P4 = Pattern.compile("^#第\\d+章.*$");
 	private static final Pattern P5 = Pattern.compile("^#第[\\d—-]+章.*$");
+	private static final Pattern P6 = Pattern.compile("^#\\d+");
 
 
 	private static boolean isTitle(String line) {
-		return P4.matcher(line).matches();
+		return P6.matcher(line).find();
 	}
 
 	@Test

@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -925,13 +927,15 @@ public class SimpleTest {
     }
 
     @Test
-    public void testMe() {
-        String s1 = null;
-        String s2 = "";
-        Long n1 = null;
-        Integer n2 = 3;
-        System.out.println(isAnyInvalid(s1, s2, n1));
-        System.out.println(isAnyValid(s1, s2, n1, n2));
+    public void testMe() throws JsonProcessingException {
+        System.out.println(Arrays.toString(new String[]{"a", "b"}));
+        System.out.println(new ObjectMapper().writeValueAsString(new String[]{"a", "b"}));
+//        String s1 = null;
+//        String s2 = "";
+//        Long n1 = null;
+//        Integer n2 = 3;
+//        System.out.println(isAnyInvalid(s1, s2, n1));
+//        System.out.println(isAnyValid(s1, s2, n1, n2));
     }
 
     private boolean isAnyInvalid(Object... objs) {

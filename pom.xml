@@ -3,8 +3,64 @@
   <groupId>javase</groupId>
   <artifactId>javase</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.8.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
   
   <dependencies>
+
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
+
+      <dependency>
+          <groupId>org.springframework.data</groupId>
+          <artifactId>spring-data-elasticsearch</artifactId>
+          <version>3.2.11.RELEASE</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+      <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+          <version>4.0.1</version>
+          <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>com.alibaba</groupId>
+          <artifactId>easyexcel</artifactId>
+          <version>2.2.11</version>
+      </dependency>
+
+      <dependency>
+          <groupId>net.lingala.zip4j</groupId>
+          <artifactId>zip4j</artifactId>
+          <version>2.9.0</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.tika</groupId>
+          <artifactId>tika-core</artifactId>
+          <version>1.13</version>
+      </dependency>
+
+      <dependency>
+          <groupId>blog.net.sourceforge</groupId>
+          <artifactId>pinyin4j</artifactId>
+          <version>2.5.0</version>
+      </dependency>
+
+      <dependency>
+          <groupId>com.netease.cloud</groupId>
+          <artifactId>nos-sdk-java</artifactId>
+          <version>1.2.7</version>
+      </dependency>
 
       <dependency>
           <groupId>org.apache.maven</groupId>
