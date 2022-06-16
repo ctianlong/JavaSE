@@ -94,7 +94,10 @@ public class CaffeineTest {
         // 直接指定时钟
         ticker.advance(3800, TimeUnit.MILLISECONDS);
         System.out.println(cache.get(key));
+
     }
+
+
 
 
 }

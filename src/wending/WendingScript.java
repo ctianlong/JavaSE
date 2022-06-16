@@ -3,8 +3,10 @@ package wending;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Test;
+import util.common.NumberUtils;
 import util.http.HttpClientUtils;
 
 import java.io.*;
@@ -41,12 +43,12 @@ public class WendingScript {
 	private static boolean apiInsert(String title, String content, long index) throws Exception {
 		CloseableHttpClient httpClient = HttpClientUtils.getDefaultHttpClient();
 		Map<String, String> header = new HashMap<>();
-		header.put("Cookie", "NOVEL_FINANCE_BACKEND_U=13ffcbaf-66c6-457b-8ddf-a480bee2cbab-1635216232838");
+		header.put("Cookie", "NOVEL_FINANCE_BACKEND_U=1af83337-1bba-40f7-b8ee-2d1764b0adf7-1652066687503");
 		Map<String, String> params = new HashMap<>();
 		params.put("articleContent", content);
 		params.put("articleTitle", title);
 		params.put("indexId", String.valueOf(index));
-		params.put("bookId", "3a5b5b89087d47e1aa13b621b5070eea_4");
+		params.put("bookId", "1d776fb7751e4e648bdabd74673cfc3a_4");
 		params.put("needPay", "1");
 		params.put("needAnti", "false");
 //        params.put("csrf_token", "3313fbcb5e0654489117eeed22498652");
@@ -76,22 +78,26 @@ public class WendingScript {
 //				}
 //			} else {
 //				break;
-//			}
+//			} 
 //		}
 //		System.out.println(count);
 //	}
 
 	@Test
 	public void read() throws Exception {
+		System.setProperty("org.apache.commons.logging.LogFactory", "org.apache.commons.logging.impl.LogFactoryImpl");
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.simplelog.defaultlog", "error");
+
 		System.out.println("startTime: " + new Date());
 		// todo 首行换行，注意首行的标题可能有特殊字符，导致无法匹配正则
-        String path = "C:\\Users\\ctl\\Desktop\\丁二狗的完美人生-接书文档.txt";
+        String path = "C:\\Users\\ctl\\Desktop\\执掌时代-修改.txt";
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 		int count = 0;
 		int count1 = 0;
 		List<String> error = Lists.newArrayList();
-		int startIndex = 4805;
-		long startSort = 185001;
+		int startIndex = 423;
+		long startSort = 105251;
 		String realTitle = null;
 		StringBuilder sb = new StringBuilder();
 		while (true) {
@@ -123,7 +129,10 @@ public class WendingScript {
 				continue;
 			}
 			line = line.trim();
-			line = line.replaceFirst("\\u3000", "");
+			line = line.replaceFirst("\\u3000+", "");
+			if (StringUtils.isBlank(line)) {
+				continue;
+			}
 			if (isTitle(line)) {
 				// 将上一次存储的章节插入
 				if (realTitle != null && sb.length() == 0) {
@@ -149,15 +158,13 @@ public class WendingScript {
 					startIndex++;
 				}
 
-				realTitle = line.substring(1);
-
-//				String ss = line.substring(line.indexOf("章") + 1);
+//				int index = line.indexOf("：");
+//				String ss = line.substring(index + 1);
 //				String title = ss.replaceFirst("^[\\s：]+", "");
-
 //				String title = StringUtils.removeStart(s2, " ");
-
 //				String[] split = StringUtils.split(line, "章");
-//				realTitle = "第" + String.valueOf(startIndex) + "章" + title;
+//				realTitle = "第" + (startIndex) + "章：" + ss;
+				realTitle = "第" + (startIndex) + "章" + line.substring(line.indexOf(" "));
 //				realTitle = "第" + String.valueOf(startIndex) + "章";
 //				if (split.length == 2) {
 //					realTitle = realTitle + "" + split[1];
@@ -188,14 +195,16 @@ public class WendingScript {
 	// 1开棺有喜：冥夫求放过 + 2恐怖女网红(1)
 	private static final Pattern P1 = Pattern.compile("^(第|(番外))?[\\d-]+章?\\s.*$");
 	private static final Pattern P2 = Pattern.compile("^第.+章\\s.+$");
-	private static final Pattern P3 = Pattern.compile("^第[零一二三四五六七八九十百千]+章\\s.+$");
+	private static final Pattern P3 = Pattern.compile("^^第[零|一|二|三|四|五|六|七|八|九|十|百|千]+章\\s.+$");
 	private static final Pattern P4 = Pattern.compile("^#第\\d+章.*$");
 	private static final Pattern P5 = Pattern.compile("^#第[\\d—-]+章.*$");
-	private static final Pattern P6 = Pattern.compile("^#\\d+");
+	private static final Pattern P6 = Pattern.compile("^#第\\d+章.*$");
+	private static final Pattern P7 = Pattern.compile("^#第\\d+章\\s?：.+$");
+	private static final Pattern P8 = Pattern.compile("^#第\\d+章\\s.+$");
 
 
 	private static boolean isTitle(String line) {
-		return P6.matcher(line).find();
+		return P8.matcher(line).find();
 	}
 
 	@Test

@@ -23,6 +23,20 @@ import org.junit.Test;
  *
  */
 public class TestLocalDateTime {
+
+	@Test
+	public void test8() {
+		LocalDateTime time = LocalDateTime.parse("2021-12-13 11:42:38", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//		LocalDateTime time = LocalDateTime.now();
+//		System.out.println(time.toEpochSecond(ZoneOffset.of("+8")));
+//		System.out.println(time.toInstant(ZoneOffset.of("+8")).toEpochMilli());
+		System.out.println(string2Long("2021-12-13 11:42:38", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+	}
+
+	public static long string2Long(String time, DateTimeFormatter formatter) {
+		LocalDateTime localDateTime = LocalDateTime.parse(time, formatter);
+		return localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+	}
 	
 	//6. ZoneDate  ZoneTime  ZoneDateTime  时区
 	@Test

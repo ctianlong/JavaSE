@@ -1,6 +1,7 @@
 package test;
 
-import java.io.File;  
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;  
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,10 +12,14 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;  
 import java.security.cert.CertificateException;  
 import java.util.ArrayList;  
-import java.util.List;  
-  
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.imageio.ImageIO;
 import javax.net.ssl.SSLContext;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,8 +30,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;  
 import org.apache.http.client.methods.CloseableHttpResponse;  
 import org.apache.http.client.methods.HttpGet;  
-import org.apache.http.client.methods.HttpPost;  
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;  
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;  
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;  
 import org.apache.http.entity.ContentType;
@@ -36,10 +43,14 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;  
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;  
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;  
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 import util.http.HttpClientUtils;
 
@@ -347,7 +358,56 @@ public class HttpClientTest {
     }
 
     @Test
-    public void hackHouzhao() {
+    public void testConnPoolLeak() {
+        System.setProperty("org.apache.commons.logging.LogFactory", "org.apache.commons.logging.impl.LogFactoryImpl");
+        LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+        LogFactory.getFactory().setAttribute("org.apache.commons.logging.simplelog.defaultlog", "error");
+
+        ThreadSafeClientConnManager connManager = new ThreadSafeClientConnManager();
+        connManager.setDefaultMaxPerRoute(20);
+        connManager.setMaxTotal(20);
+
+        HttpParams httpClientParams = new BasicHttpParams();
+        // 同时也会设置从连接池中获取连接的时间
+        HttpConnectionParams.setConnectionTimeout(httpClientParams, 10000);
+        HttpConnectionParams.setSoTimeout(httpClientParams, 10000);
+        HttpConnectionParams.setStaleCheckingEnabled(httpClientParams, true);
+        HttpConnectionParams.setTcpNoDelay(httpClientParams, true);
+
+        DefaultHttpClient httpClient = new DefaultHttpClient(connManager, httpClientParams);
+
+//        new Thread(() -> {
+//            while (true) {
+//                try {
+//                    Thread.sleep(30000);
+//                } catch (InterruptedException e) {
+//                }
+//                System.out.println("------clean");
+//                connManager.closeIdleConnections(1, TimeUnit.SECONDS);
+//            }
+//        }).start();
+
+        HttpRequestBase httpRequest = new HttpGet("http://quickapi.wending.yuedu.163.com/test/2");
+//        HttpRequestBase httpRequest = new HttpGet("https://easyreadfs.nosdn.127.net/wwb.bb7d2c29646c49d6bda5cdd383ad51f6.jpg");
+
+        for (int i = 0; i < 30; i++) {
+            try {
+                HttpResponse response = httpClient.execute(httpRequest);
+                InputStream content = response.getEntity().getContent();
+//                System.out.println(IOUtils.toString(content, "UTF-8"));
+//                content.close();
+//                BufferedImage image = ImageIO.read(content);
+                System.out.println("call-" + i + ": " + response.getStatusLine().getStatusCode());
+//                System.out.println("call-" + i + ": " + response.getStatusLine().getStatusCode() + " size " + image.getWidth() + ":" + image.getHeight());
+
+//            String result = EntityUtils.toString(response.getEntity());
+//            System.out.println(result);
+            } catch (Exception e) {
+                System.out.println("error, call-" + i + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
     }
     
     

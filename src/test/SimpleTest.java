@@ -59,22 +59,41 @@ import java.util.stream.Stream;
 public class SimpleTest {
 
     @Test
+    public void test1111() {
+        String s = "{\"_hostname\":\"yuedu9.v1.literature.jda.vpc\",\"_body\":\"2021-12-02 11:20:37,934  INFO (LogUtil.java:26)[qaStatistic] - [j-2], userId:1070, channelId:7, linkId:0, timestamp:1638415237934, common:{\\\"androidId\\\":\\\"36cecec57756f3d27\\\",\\\"osType\\\":\\\"android\\\",\\\"model\\\":\\\"X23\\\",\\\"versionCode\\\":24,\\\"packageName\\\":\\\"com.kuailai1\\\",\\\"manufacturer\\\":\\\"vivo\\\",\\\"brand\\\":\\\"vivo\\\",\\\"osVersion\\\":\\\"10\\\",\\\"clientTime\\\":1638415234389}, message:{\\\"bannerId\\\":\\\"665\\\",\\\"order\\\":2,\\\"configType\\\":0,\\\"sourceUuid\\\":\\\"qa_ZWwEKZxHinD8_zwkKD0kyRDacaH-bHcnOi-eRNsm-685dy8EKQ\\\"}\"}";
+        String s1 = "^\\{\"\\w+\":\".*\"\\,\"\\w+\":\".*\\[\\w+\\]\\s+\\-\\s+\\[(\\w+\\-\\d+)\\],.*}$";
+        System.out.println(Pattern.compile(s1).matcher(s).matches());
+    }
+
+    @Test
     public void testParallCollect() {
-        List<Integer> list = Lists.newArrayList();
-        for (int i = 0; i < 1000; i++) {
-            list.add(i);
-        }
+//        List<Integer> list = Lists.newArrayList();
+//        for (int i = 0; i < 1000; i++) {
+//            list.add(i);
+//        }
 //        Set<Integer> collect = Lists.partition(list, 1000).parallelStream().flatMap(Collection::stream).collect(Collectors.toSet());
 //        System.out.println(collect.size());
 
-        List<Integer> result = list.parallelStream().filter(i -> i % 2 == 1).skip(100).limit(20).collect(Collectors.toList());
+//        List<Integer> result = list.parallelStream().filter(i -> i % 2 == 1).skip(100).limit(20).collect(Collectors.toList());
 //        System.out.println(result.size());
 //        result.forEach(System.out::println);
 
+        SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd");
+        String currentDay = formatter.format(new Date());
+
+        List<String> list1 = Lists.newArrayList("a", "b", "c", "d", "e");
+        Iterator<String> iterator = list1.iterator();
+        while (iterator.hasNext()) {
+            String s = iterator.next();
+            System.out.println(s);
+            if ("c".equals(s)) {
+                iterator.remove();
+            }
+        }
+        System.out.println(list1);
 
 
-
-        System.out.println(result);
+//        System.out.println(result);
     }
 
     @Test
@@ -688,22 +707,32 @@ public class SimpleTest {
 
     @Test
     public void testGG() {
-        String[] s = StringUtils.split("第111章  冯宝宝和威廉姆斯", " ");
-        System.out.println(s.length);
+        Map<String, String> map = Maps.newHashMap();
+        map.put("key", null);
+        System.out.println(map.containsKey("key"));
+        System.out.println(map.containsKey("foo"));
+        System.out.println(map.get("key"));
+        System.out.println(map.get("foo"));
+//        String[] s = StringUtils.split("第111章  冯宝宝和威廉姆斯", " ");
+//        System.out.println(s.length);
     }
 
     @Test
     public void testJwt() throws InterruptedException {
-        for (int i = 1; i <= 100; i++) {
-            String secret = RandomStringUtils.randomAlphanumeric(64);
-            long start = System.currentTimeMillis();
-            String jwt = JWT.create()
-                    .withSubject(String.valueOf(i))
-                    .withExpiresAt(new Date(System.currentTimeMillis() + i * 100L))
-                    .withClaim("k", "" + i)
-                    .sign(Algorithm.HMAC256(secret));
-            System.out.println(System.currentTimeMillis() - start);
-        }
+        DecodedJWT decodedJwt = JWT.require(Algorithm.HMAC256("of=sAIN0U0^keZ@0LPGDe4V%QPD74Oc+0wWQuTgvD&9E*q0Ux-F@cRSLBS2-#yq!::pre"))
+                    .build().verify("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDc3NyIsImlhdCI6MTY1MTczMjkyNH0.Mo2K1gf6u5LuZTIaAoq71LacBLt47SLoyViw_RGXvEg");
+
+        System.out.println(decodedJwt.getSubject());
+//        for (int i = 1; i <= 100; i++) {
+//            String secret = RandomStringUtils.randomAlphanumeric(64);
+//            long start = System.currentTimeMillis();
+//            String jwt = JWT.create()
+//                    .withSubject(String.valueOf(i))
+//                    .withExpiresAt(new Date(System.currentTimeMillis() + i * 100L))
+//                    .withClaim("k", "" + i)
+//                    .sign(Algorithm.HMAC256(secret));
+//            System.out.println(System.currentTimeMillis() - start);
+//        }
 //        System.out.println(jwt);
 //        Thread.sleep(6000);
 //        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256("abc")).build().verify(jwt);

@@ -14,8 +14,10 @@ import util.PinYinUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * @author ctl
@@ -44,6 +46,25 @@ public class NosUploadTool {
 				new BasicCredentials("c86d8c1fa14d4e2688c19801020183f8", "6077074920a246dcbf72ae85ebf5f739"));
 		transferManager.setConfiguration(configuration);
 	}
+
+	@Test
+	public void uploadOneFile() throws Exception {
+		FileInputStream fin = new FileInputStream("D:\\work\\netease\\quick\\分销API文档\\快应用分销API接口文档.md");
+
+		ObjectMetadata metadata = new ObjectMetadata();
+		metadata.setContentLength(fin.available());
+		metadata.setContentType("application/octet-stream");
+//		metadata.setContentType("text/html");
+
+//		String key = UUID.randomUUID().toString().replace("-", "") + "/bootstrap-4-4-1.min.css";
+//		String key = "wending_quick_app_dist_api_html_doc_v1.html";
+		String key = "wending_quick_app_dist_api_md_doc_v1.md";
+
+		putObject(publicBucket, key, fin, metadata);
+
+		System.out.println(getPublicObjectUrlFromKey(key));
+	}
+
 
 	@Test
 	public void upload() {
