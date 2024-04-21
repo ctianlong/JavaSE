@@ -1,5 +1,7 @@
 package util.gson;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDate;
 
 /**
@@ -8,6 +10,7 @@ import java.time.LocalDate;
  */
 public class Employee {
 	private Integer id;
+	@SerializedName("FirstName")
 	private String firstName;
 	private Boolean active;
 	private LocalDate dob;

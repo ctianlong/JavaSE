@@ -1,6 +1,7 @@
 package util.gson;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -14,6 +15,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,9 +79,25 @@ public class GsonUtil {
 		map.put("b", 3.0);
 		String content = gson().toJson(map);
 		System.out.println(content);
-		Map<String, Object> r1 = gson().fromJson(content, MAP_TYPE);
-		System.out.println(r1);
+
+		JsonObject jsonObject = gson().fromJson(content, JsonObject.class);
+		System.out.println(jsonObject.get("url").getAsString());
+		JsonElement element = jsonObject.get("xxx");
+		System.out.println(element.getAsString());
+
+
+//		Map<String, Object> r1 = gson().fromJson(content, MAP_TYPE);
+//		System.out.println(r1);
 //		System.out.println(gson().toJson(r1));
+	}
+
+	@Test
+	public void testTypeToken() {
+		List<String> list = Lists.newArrayList("a", "b", "c");
+		String json = GSON.toJson(list);
+
+		List<String> ll = GSON.fromJson(json, new TypeToken<List<String>>(){}.getType());
+		System.out.println(ll);
 	}
 
 	@Test
@@ -146,6 +164,14 @@ public class GsonUtil {
 				.create();
 		Employee employee = gson.fromJson(json, Employee.class);
 		System.out.println(employee);
+	}
+
+	@Test
+	public void testCase() {
+		String json = "{'id': 1001, 'FirstName': 'Lokesh'}";
+		Employee employee = gson().fromJson(json, Employee.class);
+		System.out.println(employee);
+
 	}
 
 }

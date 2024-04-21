@@ -24,13 +24,13 @@ public class MailTest {
 //		mailSender.setHost("smtp.qq.com");
 //		mailSender.setPort(465);
 //		mailSender.setUsername("770626703@qq.com");
-//		mailSender.setPassword("mssjbyujwbzmbaid");
+//		mailSender.setPassword("");
 
 		// 163邮箱smtp设置
 		mailSender.setHost("smtp.163.com");
 		mailSender.setPort(465);
 		mailSender.setUsername("chengtl0131@163.com");
-		mailSender.setPassword("KFESSGDZHTEZSXGL");
+		mailSender.setPassword("");
 
 		mailSender.setDefaultEncoding("UTF-8");
 		Properties properties = new Properties();
@@ -49,8 +49,8 @@ public class MailTest {
 //		String[] to = {"chengtl0131@163.com"};
 		String[] to = {"770626703@qq.com"};
 		String[] cc = {};
-		String subject = "小鹏飞公司问题反馈";
-		String content = "你好，这是鹏飞公司的问题反馈";
+		String subject = "小鹏飞公司问题反馈11";
+		String content = "你好，这是鹏飞公司的问题反馈11";
 		System.out.println(send(to, cc, subject, content, null));
 	}
 

@@ -44,7 +44,8 @@ public class HttpClientUtils {
 
     private static final String HTTP_PROTOCOL = "http";
     private static final String HTTPS_PROTOCOL = "https";
-    private static final String[] SUPPORTED_PROTOCOLS = new String[]{"SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
+    private static final String[] SUPPORTED_PROTOCOLS = new String[]{"TLSv1", "TLSv1.1", "TLSv1.2"};
+//    private static final String[] SUPPORTED_PROTOCOLS = new String[]{"SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
     private static final long KEEP_ALIVE_DURATION = 10000; // 长连接时间，10秒
 
     private static final int DEFAULT_MAX_THREADS = 500;

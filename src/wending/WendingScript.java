@@ -11,13 +11,88 @@ import util.http.HttpClientUtils;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author ctl
  * @date 2020/6/30
  */
 public class WendingScript {
+
+
+	@Test
+	public void test12345() throws IOException, InterruptedException {
+		System.setProperty("org.apache.commons.logging.LogFactory", "org.apache.commons.logging.impl.LogFactoryImpl");
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.simplelog.defaultlog", "error");
+		ExecutorService executorService = Executors.newFixedThreadPool(200);
+		AtomicInteger num = new AtomicInteger();
+		AtomicInteger count = new AtomicInteger();
+		for (int i = 0; i < 10000000; i++) {
+			executorService.execute(() -> {
+				Map<String, String> h = new HashMap<>();
+				h.put("User-Agent", "qwertyuiieor" + num.incrementAndGet());
+				try {
+					HttpClientUtils.Response response = HttpClientUtils.get("https://api.mpyouzi.com/api/h5/ma/url_scheme?pathId=62d7a1d9f7497f37ea10382e", h, null);
+					String responseBody = response.getResponseBody();
+//					if (responseBody.contains("weixin")) {
+						System.out.println(count.incrementAndGet() + ":" + responseBody);
+//					}
+//					System.out.println(count.incrementAndGet());
+				} catch (IOException e) {
+				}
+			});
+		}
+		System.out.println("-----------------------");
+		Thread.sleep(1000000000);
+		System.out.println(count);
+
+	}
+
+	@Test
+	public void test123() throws IOException {
+		System.setProperty("org.apache.commons.logging.LogFactory", "org.apache.commons.logging.impl.LogFactoryImpl");
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.simplelog.defaultlog", "error");
+
+		Map<String, String> header = new HashMap<>();
+		List<String> list = Lists.newArrayList();
+
+		List<String> uas = Lists.newArrayList();
+		for (int i = 0; i < 10000; i++) {
+			uas.add("1chrome" + i);
+		}
+		AtomicInteger count = new AtomicInteger();
+		List<String> result = uas.parallelStream().map(ua -> {
+			Map<String, String> h = new HashMap<>();
+			h.put("User-Agent", ua);
+			try {
+				HttpClientUtils.Response response = HttpClientUtils.get("https://api.mpyouzi.com/api/h5/ma/url_scheme?pathId=62d7a1d9f7497f37ea10382e", h, null);
+				System.out.println(count.incrementAndGet());
+;
+				return response.getResponseBody();
+			} catch (IOException e) {
+			}
+			return "error";
+		}).collect(Collectors.toList());
+
+		System.out.println(count.intValue());
+		System.out.println(result);
+
+
+//		for (int i = 0; i < 100; i++) {
+//			header.put("User-Agent", "chrome" + i);
+//			HttpClientUtils.Response response = HttpClientUtils.get("https://api.mpyouzi.com/api/h5/ma/url_scheme?pathId=62d7a1d9f7497f37ea10382e", header, null);
+//			list.add(response.getResponseBody());
+//			System.out.println(i);
+//		}
+//		list.forEach(System.out::println);
+	}
 
 //    @Test
 //    public void batchAddArticle() {
@@ -43,12 +118,12 @@ public class WendingScript {
 	private static boolean apiInsert(String title, String content, long index) throws Exception {
 		CloseableHttpClient httpClient = HttpClientUtils.getDefaultHttpClient();
 		Map<String, String> header = new HashMap<>();
-		header.put("Cookie", "NOVEL_FINANCE_BACKEND_U=1af83337-1bba-40f7-b8ee-2d1764b0adf7-1652066687503");
+		header.put("Cookie", "NOVEL_FINANCE_BACKEND_U=1a8d2f8e-14b1-4d40-a836-1c4ef9669170-1684148836630");
 		Map<String, String> params = new HashMap<>();
 		params.put("articleContent", content);
 		params.put("articleTitle", title);
 		params.put("indexId", String.valueOf(index));
-		params.put("bookId", "1d776fb7751e4e648bdabd74673cfc3a_4");
+		params.put("bookId", "ts_af678b90a05643df8a3bdd0ee0facbf3_4");
 		params.put("needPay", "1");
 		params.put("needAnti", "false");
 //        params.put("csrf_token", "3313fbcb5e0654489117eeed22498652");
@@ -91,13 +166,13 @@ public class WendingScript {
 
 		System.out.println("startTime: " + new Date());
 		// todo 首行换行，注意首行的标题可能有特殊字符，导致无法匹配正则
-        String path = "C:\\Users\\ctl\\Desktop\\执掌时代-修改.txt";
+        String path = "/Users/chengtianlong/Desktop/一品红人-m.txt";
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 		int count = 0;
 		int count1 = 0;
 		List<String> error = Lists.newArrayList();
-		int startIndex = 423;
-		long startSort = 105251;
+		int startIndex = 248;
+		long startSort = 12401;
 		String realTitle = null;
 		StringBuilder sb = new StringBuilder();
 		while (true) {
@@ -152,7 +227,9 @@ public class WendingScript {
 					count1++;
 					long consume = System.currentTimeMillis() - t1;
 					System.out.println(count1 + " | " + realTitle + " | " + startSort + " | " + consume + "ms");
-//	                System.out.println(sb.toString());
+//					if (count1 <= 3) {
+//						System.out.println(sb.toString());
+//					}
 //	                Thread.sleep(500L);
 					startSort += 50;
 					startIndex++;
@@ -164,7 +241,7 @@ public class WendingScript {
 //				String title = StringUtils.removeStart(s2, " ");
 //				String[] split = StringUtils.split(line, "章");
 //				realTitle = "第" + (startIndex) + "章：" + ss;
-				realTitle = "第" + (startIndex) + "章" + line.substring(line.indexOf(" "));
+				realTitle = line.replaceFirst("#第\\d+章", "第" + (startIndex) + "章");
 //				realTitle = "第" + String.valueOf(startIndex) + "章";
 //				if (split.length == 2) {
 //					realTitle = realTitle + "" + split[1];
@@ -204,7 +281,7 @@ public class WendingScript {
 
 
 	private static boolean isTitle(String line) {
-		return P8.matcher(line).find();
+		return P4.matcher(line).find();
 	}
 
 	@Test

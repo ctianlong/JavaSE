@@ -1,22 +1,63 @@
 package test;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import sun.reflect.generics.tree.VoidDescriptor;
 
 
 public class SmallTest {
+
+	@Test
+	public void testListRemove() {
+		System.out.println(LocalDate.now().withDayOfMonth(1).atStartOfDay().toInstant(ZoneOffset.ofHours(8)).toEpochMilli());
+		System.out.println("\uD83D\uDD25姜云山\uD83D\uDD25".getBytes(StandardCharsets.UTF_8).length);
+		String aaa = JSON.toJSONString(new Objj(true));
+		System.out.println(JSON.toJSONString(Lists.newArrayList(aaa, "bbb")));
+		String sss = "/pages/home/home?linkUuid={linkUuid}???";
+		sss = StringUtils.replaceFirst(sss, "\\?", ".html?");
+		System.out.println(sss);
+
+		List<Integer> list = Lists.newArrayList(1, 2, 3, 4, 5,6,7,8,9,10);
+//		System.out.println(list);
+		List<Integer> subList = list.subList(0, 5);
+		List<List<Integer>> ss = Lists.partition(subList, 2);
+		System.out.println(ss);
+//		System.out.println(subList);
+//		subList.clear();
+//		System.out.println(list);
+	}
+
+	@Test
+	public void testMapSort() {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		map.put(1, Lists.newArrayList(11, 12, 13, 14));
+		map.put(2, Lists.newArrayList(21, 22, 23, 24));
+		map.put(3, Lists.newArrayList(31, 32, 33, 34));
+
+		List<Integer> list = map.entrySet().stream()
+				.sorted(Map.Entry.<Integer, List<Integer>>comparingByKey().reversed())
+				.map(Map.Entry::getValue)
+				.flatMap(List::stream)
+				.collect(Collectors.toList());
+		System.out.println(list);
+	}
 	
 
 	public static void main(String[] args) {
